@@ -1,0 +1,14 @@
+# Задания и лекции храню локально
+materials/
+
+# Заметки к защите и черновики
+DEFENSE.md
+*.local.sql
+
+# Редактор и мусор
+.vscode/
+.env
+.DS_Store
+*.db
+*.sqlite
+__pycache__/

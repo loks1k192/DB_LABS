@@ -1,0 +1,21 @@
+# PostgreSQL для лабораторных по БД.
+# Запуск:      docker compose up -d
+# Консоль:     docker compose exec db psql -U student -d labs
+# Скрипт лабы: docker compose exec db psql -U student -d labs -f /labs/lab1/schema.sql
+services:
+  db:
+    image: postgres:17
+    container_name: db-labs-postgres
+    environment:
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student
+      POSTGRES_DB: labs
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./:/labs:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata:
