@@ -30,13 +30,14 @@ IT-компания ведёт несколько проектов. В кажд�
 | [schema.sql](schema.sql) | создание структуры БД: 6 таблиц, ключи, ограничения |
 | [data.sql](data.sql) | тестовые данные |
 | [constraints_test.sql](constraints_test.sql) | 19 операций, которые база отклоняет, и демонстрация `ON DELETE` |
+| [er-diagram.png](er-diagram.png) | ER-диаграмма, построенная SchemaSpy по базе: связи от поля к полю |
 | [er-diagram-crowsfoot.png](er-diagram-crowsfoot.png) | ER-диаграмма, нотация Crow's Foot |
 | [er-diagram-idef1x.png](er-diagram-idef1x.png) | ER-диаграмма, нотация IDEF1X |
 | `migration.sql` | изменение структуры по дополнительному требованию (выдаётся на защите) |
 
 ## ER-диаграмма
 
-![ER-диаграмма](er-diagram-crowsfoot.png)
+![ER-диаграмма](er-diagram.png)
 
 ## Запуск
 
