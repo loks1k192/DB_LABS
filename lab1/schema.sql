@@ -5,16 +5,16 @@ CREATE TABLE users (
     id          INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     first_name  VARCHAR(100) NOT NULL,
     last_name   VARCHAR(100) NOT NULL,
-    login       VARCHAR(32)  NOT NULL UNIQUE CHECK (login ~ '^[a-z0-9._]{3,32}$'),
+    login       VARCHAR(32)  NOT NULL UNIQUE CHECK (login = lower(login) AND length(login) >= 3),
     email       VARCHAR(100) NOT NULL UNIQUE
-                CHECK (email = lower(email) AND email ~ '^[^@\s]+@[^@\s]+\.[a-z]{2,}$'),
+                CHECK (email = lower(email) AND email LIKE '%_@_%'),
     job_title   VARCHAR(100),
     is_active   BOOLEAN NOT NULL DEFAULT true
 );
 
 CREATE TABLE projects (
     id          INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    code        VARCHAR(10)  NOT NULL UNIQUE CHECK (code ~ '^[A-Z][A-Z0-9]{1,9}$'),
+    code        VARCHAR(10)  NOT NULL UNIQUE CHECK (code = upper(code)),
     name        VARCHAR(200) NOT NULL,
     owner_id    INTEGER NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
     status      VARCHAR(20)  NOT NULL DEFAULT 'planned'
