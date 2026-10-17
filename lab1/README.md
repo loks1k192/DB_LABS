@@ -23,17 +23,19 @@
 
 IT-компания ведёт несколько проектов. В каждом проекте работает команда сотрудников с ролями (руководитель, аналитик, разработчик, тестировщик, дизайнер), один сотрудник может быть в нескольких командах. Работа делится на задачи с номером внутри проекта (CRM-3), статусом, приоритетом, автором и исполнителем — исполнителем может быть только участник команды этого проекта. К задачам пишут комментарии, сотрудники списывают на задачи отработанные часы.
 
+**Изменение предметной области** (выдано на защите): вместо учёта часов хранить историю статусов задачи — в каком статусе и сколько времени находилась задача. Таблица `time_entries` заменяется таблицей `task_status_history`.
+
 ## Файлы
 
 | Файл | Содержание |
 |------|------------|
 | [schema.sql](schema.sql) | создание структуры БД: 6 таблиц, ключи, ограничения |
 | [data.sql](data.sql) | тестовые данные |
-| [constraints_test.sql](constraints_test.sql) | 19 операций, которые база отклоняет, и демонстрация `ON DELETE` |
-| [er-diagram.png](er-diagram.png) | ER-диаграмма, построенная SchemaSpy по базе: связи от поля к полю |
-| [er-diagram-crowsfoot.png](er-diagram-crowsfoot.png) | ER-диаграмма, нотация Crow's Foot |
-| [er-diagram-idef1x.png](er-diagram-idef1x.png) | ER-диаграмма, нотация IDEF1X |
-| `migration.sql` | изменение структуры по дополнительному требованию (выдаётся на защите) |
+| [constraints_test.sql](constraints_test.sql) | 19 операций, которые база отклоняет, и демонстрация `ON DELETE` (запускать после миграции) |
+| [er-diagram.png](er-diagram.png) | ER-диаграмма после миграции, построенная SchemaSpy по базе: связи от поля к полю |
+| [er-diagram-crowsfoot.png](er-diagram-crowsfoot.png) | ER-диаграмма до миграции, нотация Crow's Foot |
+| [er-diagram-idef1x.png](er-diagram-idef1x.png) | ER-диаграмма до миграции, нотация IDEF1X |
+| [migration.sql](migration.sql) | изменение предметной области: удаление `time_entries`, создание `task_status_history` |
 
 ## ER-диаграмма
 
@@ -47,7 +49,8 @@ IT-компания ведёт несколько проектов. В кажд�
 docker compose up -d
 docker compose exec db psql -U student -d labs -f /labs/lab1/schema.sql
 docker compose exec db psql -U student -d labs -f /labs/lab1/data.sql
+docker compose exec db psql -U student -d labs -f /labs/lab1/migration.sql
 docker compose exec db psql -U student -d labs -f /labs/lab1/constraints_test.sql
 ```
 
-`schema.sql` и `data.sql` можно запускать повторно: первый пересоздаёт таблицы, второй очищает их и сбрасывает счётчики id.
+`schema.sql` и `data.sql` описывают исходную модель, `migration.sql` переводит её в новую и выполняется один раз. Чтобы начать заново, запустите все скрипты по порядку: `schema.sql` удаляет и таблицу, созданную миграцией.

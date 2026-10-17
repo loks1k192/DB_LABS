@@ -1,4 +1,4 @@
--- Проверка ограничений целостности (запускать после schema.sql и data.sql)
+-- Проверка ограничений целостности (запускать после schema.sql, data.sql и migration.sql)
 
 \echo 'NOT NULL: нет фамилии'
 INSERT INTO users (first_name, login, email)
@@ -54,19 +54,19 @@ UPDATE tasks SET status = 'done' WHERE id = 3;
 \echo 'CHECK: приоритет'
 UPDATE tasks SET priority = 'urgent' WHERE id = 5;
 
-\echo 'CHECK: больше 24 часов за день'
-INSERT INTO time_entries (task_id, user_id, work_date, hours)
-VALUES (3, 3, '2026-10-02', 25);
+\echo 'CHECK: статус в истории статусов'
+INSERT INTO task_status_history (task_id, status, started_at)
+VALUES (3, 'paused', '2026-09-22 10:00+03');
 
-\echo 'составной UNIQUE: за 28.09 по CRM-3 часы уже списаны'
-INSERT INTO time_entries (task_id, user_id, work_date, hours)
-VALUES (3, 3, '2026-09-28', 2);
+\echo 'составной CHECK: период статуса заканчивается раньше, чем начинается'
+INSERT INTO task_status_history (task_id, status, started_at, ended_at)
+VALUES (3, 'review', '2026-10-05 10:00+03', '2026-10-01 10:00+03');
 
 \echo 'CHECK: комментарий из одних пробелов'
 INSERT INTO comments (task_id, author_id, body)
 VALUES (3, 2, '    ');
 
-\echo 'RESTRICT: у Кузнецова есть комментарии и списанные часы'
+\echo 'RESTRICT: у Кузнецова есть комментарии'
 DELETE FROM users WHERE id = 3;
 
 
@@ -77,12 +77,11 @@ BEGIN;
 DELETE FROM project_members WHERE project_id = 1 AND user_id = 3;
 SELECT id, project_id, task_number, assignee_id FROM tasks WHERE id IN (2, 3);
 
-\echo 'CASCADE: проект SITE удаляется вместе с командой, задачами, комментариями и часами'
+\echo 'CASCADE: проект SITE удаляется вместе с командой, задачами и комментариями'
 DELETE FROM projects WHERE id = 3;
 SELECT
     (SELECT count(*) FROM project_members WHERE project_id = 3)            AS members,
     (SELECT count(*) FROM tasks           WHERE project_id = 3)            AS tasks,
-    (SELECT count(*) FROM comments        WHERE task_id IN (16, 17, 18))   AS comments,
-    (SELECT count(*) FROM time_entries    WHERE task_id IN (16, 17, 18))   AS time_entries;
+    (SELECT count(*) FROM comments        WHERE task_id IN (16, 17, 18))   AS comments;
 
 ROLLBACK;

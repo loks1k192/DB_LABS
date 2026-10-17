@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS users, projects, project_members, tasks, comments, time_entries CASCADE;
+DROP TABLE IF EXISTS users, projects, project_members, tasks, comments, time_entries,
+    task_status_history CASCADE;
 
 
 CREATE TABLE users (
