@@ -1,17 +1,7 @@
--- Тестовые данные для системы управления проектами.
--- Запускать после schema.sql.
---
--- id генерируются базой (GENERATED ALWAYS AS IDENTITY), поэтому в INSERT их нет.
--- TRUNCATE ... RESTART IDENTITY сбрасывает счётчики, и id идут с 1 в порядке
--- вставки — на эти номера ссылаются внешние ключи ниже (номер в комментарии).
-
 TRUNCATE users, projects, project_members, tasks, comments, time_entries
     RESTART IDENTITY CASCADE;
 
 
--- ===== Сотрудники =====
--- Волкова (10) уволена: запись не удаляем, а ставим is_active = false.
--- У неё нет ни проектов, ни задач, должность не указана.
 INSERT INTO users (first_name, last_name, login, email, job_title, is_active) VALUES
     ('Алексей', 'Иванов',   'ivanov.a',    'a.ivanov@devstudio.ru',    'Руководитель проектов',   true),   -- 1
     ('Мария',   'Смирнова', 'smirnova.m',  'm.smirnova@devstudio.ru',  'Бизнес-аналитик',         true),   -- 2
@@ -25,9 +15,6 @@ INSERT INTO users (first_name, last_name, login, email, job_title, is_active) VA
     ('Ксения',  'Волкова',  'volkova.k',   'k.volkova@devstudio.ru',   NULL,                      false);  -- 10
 
 
--- ===== Проекты =====
--- Два активных, один завершён, BI только запланирован — у него ещё нет
--- даты окончания и бюджета.
 INSERT INTO projects (code, name, owner_id, status, start_date, end_date, budget, description) VALUES
     ('CRM',    'Внедрение CRM-системы',             1, 'active',    '2026-02-01', '2026-12-20', 4500000.00,
         'CRM для отдела продаж: карточки клиентов, сделки, интеграции'),  -- 1
@@ -39,9 +26,6 @@ INSERT INTO projects (code, name, owner_id, status, start_date, end_date, budget
         'Единая система отчётности для руководства');                     -- 4
 
 
--- ===== Команды проектов (M:N) =====
--- Смирнова, Попова и Васильев работают сразу в нескольких проектах.
--- Команда BI набрана заранее, до старта проекта.
 INSERT INTO project_members (project_id, user_id, role, joined_at) VALUES
     (1, 1, 'manager',   '2026-02-01'),  -- CRM
     (1, 2, 'analyst',   '2026-02-01'),  -- CRM
@@ -63,10 +47,6 @@ INSERT INTO project_members (project_id, user_id, role, joined_at) VALUES
     (4, 2, 'analyst',   '2026-09-15');  -- BI
 
 
--- ===== Задачи =====
--- Номер задачи свой в каждом проекте (CRM-1, MOBILE-1 ...).
--- Исполнитель — только участник команды проекта; у CRM-5, CRM-8 и MOBILE-7
--- исполнителя пока нет (NULL). completed_at заполнен только у задач done.
 INSERT INTO tasks (project_id, task_number, title, status, priority, author_id, assignee_id,
                    estimate_hours, due_date, created_at, completed_at, description) VALUES
     (1, 1, 'Сбор требований к CRM',                   'done',        'high',     1, 2,    24,   '2026-02-28',
@@ -111,7 +91,6 @@ INSERT INTO tasks (project_id, task_number, title, status, priority, author_id, 
         '2026-09-16 10:30+03', NULL, 'Сравнить 3–4 решения по цене и функциям');                     -- 20 BI-2
 
 
--- ===== Комментарии =====
 INSERT INTO comments (task_id, author_id, body, created_at) VALUES
     (1,  1, 'Требования согласованы с заказчиком, протокол во вложении.', '2026-02-26 17:50+03'),  -- CRM-1
     (3,  3, 'Эндпоинты GET и POST готовы, делаю PUT.',                    '2026-09-29 18:10+03'),  -- CRM-3
@@ -129,9 +108,6 @@ INSERT INTO comments (task_id, author_id, body, created_at) VALUES
     (19, 2, 'Собираю список отчётов от отделов.',                         '2026-09-20 16:00+03');  -- BI-1
 
 
--- ===== Учёт времени =====
--- Одна запись на задачу от сотрудника за день. На CRM-1 списывала часы не только
--- исполнитель (Смирнова), но и руководитель проекта (Иванов) — так можно.
 INSERT INTO time_entries (task_id, user_id, work_date, hours, note) VALUES
     (1,  2, '2026-02-10', 6,   'Интервью с отделом продаж'),  -- CRM-1
     (1,  2, '2026-02-11', 7.5, 'Оформление требований'),      -- CRM-1
