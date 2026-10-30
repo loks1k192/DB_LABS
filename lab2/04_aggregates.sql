@@ -1,5 +1,4 @@
 -- Задание 2.2. Агрегация и группировка.
-
 \echo '2.2.1. Количество задач в каждом статусе по проектам'
 SELECT
     p.code AS project,
@@ -37,12 +36,9 @@ ORDER BY
 SELECT
     t.priority,
     count(*) AS done_tasks,
-    round(
-        avg(t.completed_at :: date - t.created_at :: date),
-        1
-    ) AS avg_days,
-    min(t.completed_at :: date - t.created_at :: date) AS min_days,
-    max(t.completed_at :: date - t.created_at :: date) AS max_days
+    round(avg(t.completed_at::date - t.created_at::date), 1) AS avg_days,
+    min(t.completed_at::date - t.created_at::date) AS min_days,
+    max(t.completed_at::date - t.created_at::date) AS max_days
 FROM
     tasks t
 WHERE
@@ -51,3 +47,4 @@ GROUP BY
     t.priority
 ORDER BY
     avg_days;
+
