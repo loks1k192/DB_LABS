@@ -9,7 +9,7 @@ INSERT INTO users (first_name, last_name, login, email, job_title)
         ('Никита', 'Белов', 'belov.n', 'n.belov@devstudio.ru', 'Системный аналитик');
 
 -- проект без команды и задач, бюджет 0
-INSERT INTO projects (code, name, owner_id, STATUS, start_date, budget)
+INSERT INTO projects (code, name, owner_id, status, start_date, budget)
     VALUES
         -- 5
         ('DOCS', 'База знаний для сотрудников', 1, 'planned', '2026-12-01', 0);
@@ -17,7 +17,7 @@ INSERT INTO projects (code, name, owner_id, STATUS, start_date, budget)
 INSERT INTO project_members (project_id, user_id, role, joined_at)
     VALUES (1, 11, 'developer', '2026-07-01');
 
-INSERT INTO tasks (project_id, task_number, title, STATUS, priority, author_id, assignee_id, estimate_hours, due_date, created_at, completed_at)
+INSERT INTO tasks (project_id, task_number, title, status, priority, author_id, assignee_id, estimate_hours, due_date, created_at, completed_at)
     VALUES
         -- 21
         (1, 9, 'Экспорт карточек клиентов в CSV', 'done', 'medium', 2, 11, 8, '2026-08-20', '2026-07-06 10:00+03', '2026-08-14 16:00+03'),
@@ -51,7 +51,7 @@ VALUES
 
 -- История статусов всех задач: последний период открыт (ended_at IS NULL) и совпадает с tasks.status.
 -- MOBILE-1 возвращали с ревью на доработку; SITE-3 и MOBILE-10 выполнены без ревью.
-INSERT INTO task_status_history (task_id, STATUS, started_at, ended_at)
+INSERT INTO task_status_history (task_id, status, started_at, ended_at)
 VALUES
     -- CRM-1
     (1, 'todo', '2026-02-02 10:00+03', '2026-02-09 10:00+03'),

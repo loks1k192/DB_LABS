@@ -26,6 +26,7 @@ FROM
 WHERE
     t.status NOT IN ('done', 'cancelled')
 GROUP BY
+    u.id,
     u.last_name
 HAVING
     sum(t.estimate_hours) > 40

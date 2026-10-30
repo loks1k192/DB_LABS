@@ -5,10 +5,10 @@ SET timezone = 'Europe/Moscow';
 BEGIN;
 INSERT INTO tasks (project_id, task_number, title, priority, author_id, assignee_id, estimate_hours, due_date)
     VALUES (1, 14, 'Интеграция с почтой', 'medium', 1, 11, 16, '2026-12-01');
-INSERT INTO task_status_history (task_id, STATUS, started_at)
+INSERT INTO task_status_history (task_id, status, started_at)
 SELECT
     id,
-    STATUS,
+    status,
     created_at
 FROM
     tasks
@@ -40,19 +40,19 @@ SET
 WHERE
     task_id = 4
     AND ended_at IS NULL;
-INSERT INTO task_status_history (task_id, STATUS, started_at)
+INSERT INTO task_status_history (task_id, status, started_at)
     VALUES (4, 'done', NOW());
 UPDATE
     tasks
 SET
-    STATUS = 'done',
+    status = 'done',
     completed_at = NOW()
 WHERE
     id = 4;
 COMMIT;
 
 SELECT
-    STATUS,
+    status,
     started_at,
     ended_at
 FROM
@@ -70,12 +70,12 @@ SET
 WHERE
     project_id = 1
     AND assignee_id IS NULL
-    AND STATUS NOT IN ('done', 'cancelled');
+    AND status NOT IN ('done', 'cancelled');
 
 SELECT
     task_number,
     title,
-    STATUS,
+    status,
     assignee_id
 FROM
     tasks
