@@ -2,7 +2,8 @@
 SET
   timezone = 'Europe/Moscow';
 
-\ echo '1. INSERT: новая задача CRM-14 и её первая запись в истории статусов' BEGIN;
+\echo '1. INSERT: новая задача CRM-14 и её первая запись в истории статусов'
+BEGIN;
 
 INSERT INTO
   tasks (
@@ -55,7 +56,8 @@ WHERE
   t.project_id = 1
   AND t.task_number = 14;
 
-\ echo '2. UPDATE: задача CRM-4 (id 4) прошла ревью и выполнена' BEGIN;
+\echo '2. UPDATE: задача CRM-4 (id 4) прошла ревью и выполнена'
+BEGIN;
 
 UPDATE
   task_status_history
@@ -91,7 +93,7 @@ WHERE
 ORDER BY
   started_at;
 
-\ echo '3. Массовое UPDATE: незавершённым задачам CRM без исполнителя назначается аналитик Смирнова (id 2)'
+\echo '3. Массовое UPDATE: незавершённым задачам CRM без исполнителя назначается аналитик Смирнова (id 2)'
 UPDATE
   tasks
 SET
@@ -113,7 +115,7 @@ WHERE
 ORDER BY
   task_number;
 
-\ echo '4. DELETE: отменённая задача CRM-8 (id 8) удаляется вместе с историей (ON DELETE CASCADE)'
+\echo '4. DELETE: отменённая задача CRM-8 (id 8) удаляется вместе с историей (ON DELETE CASCADE)'
 SELECT
   count(*) AS history_before
 FROM
@@ -133,7 +135,7 @@ FROM
 WHERE
   task_id = 8;
 
-\ echo '5. ROLLBACK: удаление всех комментариев отменяется'
+\echo '5. ROLLBACK: удаление всех комментариев отменяется'
 SELECT
   count(*) AS comments_before
 FROM
